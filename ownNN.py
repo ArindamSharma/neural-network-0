@@ -31,10 +31,13 @@ def temp_weight_matrix(row,column):
 def sigmoid(x):
     return 1/1+np.exp(-1*x)
 
+def sigmoid_derivative(x):
+    return sigmoid(x)*(1-sigmoid(x))
+
 def activation_function(x):
     return sigmoid(x)
 
-def weight_correction(weight):
+def weight_change(weight):
     temp_weight=[]
     column_sum=weight.sum(axis=0)
     for row in range(len(weight)):
@@ -44,11 +47,11 @@ def weight_correction(weight):
         temp_weight.append(temp_row)
     return np.array(temp_weight)
 
-def error_matrix(weights,output_error):
+def create_error_matrix(weights,output_error):
     error_array=[]
     error_array.append(output_error)
     for i in range(len(weights)-1,0,-1):
-        temp=weight_correction(weights[i]).dot(error_array[0])
+        temp=weight_change(weights[i]).dot(error_array[0])
         error_array.insert(0,temp)
     return error_array
 
@@ -61,9 +64,21 @@ def front_propogation(layers,weights):
 
     print("\nlayers :- ",layers)
 
+def error_weight_differential(error,linked_weights,prev_output):
+    print(error,"---",linked_weights,"----",prev_output)
+    temp_sum=0
+    for i,j in zip(prev_output,linked_weights):
+        temp_sum+=i*j 
+    # print(temp_sum,",",-1 * sigmoid_derivative(temp_sum) )
+    return ( -1 * sigmoid_derivative(temp_sum) ) * prev_output
+
 def back_propogation(layers,weights,expected_output):
-    print("\nError matrix :- ",error_matrix(weights,layers[-1]-expected_output))
-    
+    error_matrix=create_error_matrix(weights,layers[-1]-expected_output)
+    # print(error_matrix)
+    layer_index=len(layers)-1
+    node=0
+    x=error_weight_differential(error_matrix[layer_index-1][node],layers[layer_index-1],weights[layer_index-1][:,node])
+    print(x)    
 
 def X():
     pass
