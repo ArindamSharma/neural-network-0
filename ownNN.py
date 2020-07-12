@@ -49,19 +49,20 @@ def random_weights_generator(layers):
     return weights
 
 def front_propogation(layers,weights):
-    for i in range(len(weights)-1):
+    for i in range(len(weights)):
         temp=np.matmul(weights[i],layers[i])
         # print(temp,np.array(list(map(sigmod,temp))))
         layers[i+1]=np.array(list(map(activation_function,temp)))
 
 def weight_change(weight):
     temp_weight=[]
+    # print(weight)
     row_sum=weight.sum(axis=1)
+    # print(row_sum)
     for row in range(len(weight)):
         temp_row=[]
         for item in range(len(weight[row])):
-            print(row,item)
-            x=weight[row][item]/row_sum[item]
+            x=weight[row][item]/row_sum[row]
             temp_row.append(x)
         temp_weight.append(temp_row)
     return np.array(temp_weight)
@@ -86,7 +87,7 @@ def error_weight_differential(error,prev_output,linked_weights):
 def back_propogation(layers,weights,target_output,learning_rate):
     actual_output=layers[-1]
     error_matrix=create_error_matrix(weights,target_output-actual_output)
-    print("error:- ",error_matrix)
+    # print("error:- ",error_matrix)
 
     for layer_index in range( (len(error_matrix)-1),-1,-1  ):
         for node in range(len(error_matrix[layer_index])):
@@ -99,7 +100,7 @@ def back_propogation(layers,weights,target_output,learning_rate):
             weight_old=weights[layer_index][node]
             weight_new=weight_old-(learning_rate*x )
             # print(weight_old,learning_rate,x,weight_new)
-            weights[layer_index][:,node]=weight_new
+            weights[layer_index][node]=weight_new
 
 def Test(layers,weights):
     front_propogation(layers,weights)
@@ -126,7 +127,7 @@ layers.append(output_layer)
 #for training
 expected_output=np.array([1,2,3])
 #learining rate
-learning_rate=0.01
+learning_rate=0.005
 #getting random weights
 
 weights=random_weights_generator(layers)
@@ -135,12 +136,12 @@ weights=random_weights_generator(layers)
 #     )]
 
 printweights(weights)
-for _ in range(1):
-    print(layers)
-    Train(layers,weights,expected_output,learning_rate)
-    printweights(weights)
-
 print(layers)
+for _ in range(100):
+    Train(layers,weights,expected_output,learning_rate)
+    print("layers :-",layers)
+
+printweights(weights)
 
 
 # import tkinter as tk
