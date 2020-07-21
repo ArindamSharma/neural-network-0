@@ -1,5 +1,5 @@
-import custom_panda as pd
 import numpy as np
+import custom_panda as pd
 import random as rd
 import pickle
 data=pd.panda("iris.csv")
@@ -7,9 +7,15 @@ data=pd.panda("iris.csv")
 layers=[]
 # Function Definations
 def sigmoid(x):
+    # if(x>0):
+    #     return x
+    # return 0
     return 1/1+np.exp(-1*x)
 
 def sigmoid_derivative(x):
+    # if(x>0):
+    #     return 1
+    # return 0
     return sigmoid(x)*(1-sigmoid(x))
 
 def activation_function(x):
@@ -113,7 +119,7 @@ def Train(layers,weights,expected_output,learning_rate):
 # Input Layer
 # number_of_input=2
 # first input 1 and second input 3 and so on...
-input_layer=np.array([1,3,2])
+input_layer=np.array([1,2,3])
 layers.append(input_layer)
 # Hidden Layer
 # creating hidden layer of 3 nodes and 2 nodes and so on ....
@@ -125,15 +131,12 @@ layers.extend(hidden_layer)
 output_layer=np.array([0,0,0])
 layers.append(output_layer)
 #for training
-expected_output=np.array([1,2,3])
+expected_output=np.array([2,4,6])
 #learining rate
-learning_rate=0.005
+learning_rate=0.0008
 #getting random weights
 
 weights=random_weights_generator(layers)
-# weights=[np.array(
-#     [[0.1,0.2,0.3],[0.4,0.5,0.6],[0.7,0.8,0.9]]
-#     )]
 
 printweights(weights)
 print(layers)
@@ -142,6 +145,10 @@ for _ in range(100):
     print("layers :-",layers)
 
 printweights(weights)
+
+Test(layers,weights)
+layers[0]=np.array([1,5,8])
+print("layers :-",layers)
 
 
 # import tkinter as tk
